@@ -21,3 +21,51 @@ data:
     accessLogEncoding: JSON
 ```
 
+### 1.2 通过 Telemetry 开启日志
+
+- 开启日志，创建如下 Telemetry 资源，默认使用 envoy 的日志输出规则（以TXT格式输出到 /dev/stdout）
+
+```yaml
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: mesh-default
+  namespace: istio-system
+spec:
+  accessLogging:
+    - providers:
+      - name: envoy
+```
+
+- 通过 Telemtry 调整日志输出格式为 JSON
+
+在 istio 全局配中增加 extensionProviders 的日志定义配置，命名为 `jsonlog`，日志输出到 `/dev/null`， 日志输出格式为 `JSON`。
+更多配置可以参考istio extensionProviders的相关配置。
+```yaml
+apiVersion: v1
+data:
+  mesh: |-
+    extensionProviders:
+    - name: jsonlog
+      envoyFileAccessLog:
+        path: /dev/stdout
+        logFormat:
+          labels: {}
+```
+在 Telemtry 中使用该 provider 配置
+```yaml
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: mesh-default
+  namespace: istio-system
+spec:
+  accessLogging:
+  - providers:
+    - name: jsonlog
+```
+
+
+** 参考文档 **
+- [Global Mesh Options](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig)
+- [Envoy Access Logs](https://istio.io/latest/docs/tasks/observability/logs/access-log/)
