@@ -105,7 +105,7 @@ Envoy监听15006端口，Iptables将Envoy所在Pod的对内请求拦截后发向
 #查看
 istioctl pc l -n <namespace> --port 15006 -o json
 ```
-**filterChains中匹配路由规则 routeConfigName:inbound|8080||**
+**filterChains中匹配路由规则 `routeConfigName:inbound|8080||`**
 
 #### 3.4.4 OutboundTrafficPolicy
 在Enovy的配置中找不到和请求目的地端口的listener，则将会根据Istio的outboundTrafficPolicy全局配置选项进行处理。[配置](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig-OutboundTrafficPolicy)
@@ -129,6 +129,7 @@ istioctl pc r -n zhuzhu14 <podname>
 istioctl pc r -n zhuzhu14 <podname> --name 8080
 ```
 8080路由包含一个配置转发到 cluster: outbound|8080||server-svc.grpc.svc.cluster.local
+
 ![server-svc.grpc.svc.cluster.local][server-svc.grpc.svc.cluster.local]
 
 在 **[VirtualInboundListener](https://github.com/zshmmm/istioopt/blob/main/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/istio%E6%B5%81%E9%87%8F%E8%B5%B0%E5%90%91.md#343-virtualinboundlistener)** 章节中有一个 **routeConfigName:inbound|8080||** 的配置，查看这个Route
@@ -141,15 +142,104 @@ istioctl pc r -n grpc server-7bc7fd5479-xvv99 --name 'inbound|8080||' -o json
 
 可以看到Cluster为：**inbound|8080||**
 
+### 3.6 CDS
+
+在Envoy中，Cluster是一个服务集群，Cluster中包含一个到多个endpoint，每个endpoint都可以提供服务，Envoy根据负载均衡算法将请求发送到这些endpoint中。
+Cluster有如下4种类型
+- OutboundCluster
+- InboundCluster
+- BlackHoleCluster
+- PassthroughCluster
+
+#### 3.6.1 OutboundCluster
+
+这类Cluster对应于Envoy所在节点的外部服务。如：`outbound|8080||server-svc.grpc.svc.cluster.local`
+
+```bash
+#查看
+istioctl pc c -n zhuzhu14 client-5455fd7bd5-x48gz --port 8080 --direction outbound
+```
+
+![outbound-server-svc][outbound-server-svc]
+
+输出较多，截取几个有用的信息
+type: EDS -- 表示该Cluster的endpoint来自于动态发现，动态发现中eds_config则指向了ads，最终指向static Resource中配置的xds-grpc cluster，即istiod的地址。
+serviceName: `outbound|8080||server-svc.grpc.svc.cluster.local` -- 表示Cluster的endpoint的名称（EDS）
+
+![outbound-server-svc-detil][outbound-server-svc-detail]
+
+#### 3.6.2 InboundCluster
+该类Cluster对应于Envoy所在节点上的服务。如果该服务接收到请求，表示一个入站请求。 Pod上的Envoy，其对应的Inbound Cluster只有一个，即自身的服务。该Cluster对应的配置为***ORIGINAL_DST***，透明代理。
+
+```bash
+# 查看 8080 inbound cluster
+istioctl pc c -n grpc server-7bc7fd5479-xvv99 --port 8080 --direction inbound -o json
+```
+
+**源地址被替换为 127.0.0.6** -- [Document the 127.0.0.6 magic #29603](https://github.com/istio/istio/issues/29603)
+
+![inbound8080-detail][inbound8080-detail]
+
+
+#### 3.6.3 BlackHoleCluster
+这是一个特殊的Cluster，不配置后端处理请求的Host。请求进入后将被直接丢弃掉。如果一个请求没有找到其对的目的服务，则被发到该cluste。
+
+```bash
+#查看
+istioctl pc c -n grpc server-7bc7fd5479-xvv99 --fqdn BlackHoleCluster -o json
+```
+
+![BlackHoleCluster ][BlackHoleCluster]
+
+#### 3.6.4 PassthroughCluster
+发向PassthroughCluster的请求会被直接发送到其请求中要求的原始目地的，Envoy不会对请求进行重新路由。
+
+```bash
+# 查看
+istioctl pc c -n grpc server-7bc7fd5479-xvv99 --fqdn PassthroughCluster -o json
+```
+
+![PassthroughCluster][PassthroughCluster]
+
+
+### 3.7 EDS
+在Envoy中，Endpoint定义为群集(Cluster)中可用的IP和端口，最终找到相应的服务。
+
+```bash
+# 查看
+istioctl pc ep -n zhuzhu14 grpc-client-7b7cc74485-6p6hf --cluster "outbound|8080||server-svc.grpc.svc.cluster.local" -o json
+```
+
+![eds][eds]
+
+## 4. 总结
+请求发送到Listener，根据Route配置找到相应的Cluster，并根据负载均衡策略将请求发往Cluster的Endpoint。
+
+## 5. Istio 相关自定义资源
+
+- [Virtualservice](https://istio.io/docs/reference/config/networking/virtual-service/)：定义路由规则，根据 Host 或 Header 制定规则，根据同服务不同版本之间进行流量调度。定义的是路由规则。
+- [DestinationRule](https://istio.io/docs/reference/config/networking/destination-rule/)：定义目的服务的配置策略以及可路由子集。策略包括熔断、负载均衡以及 TLS 等。定义的是路由后的处理策略。
+- [ServiceEntry](https://istio.io/docs/reference/config/networking/service-entry/)：通过ServiceEntry向Istio中加入服务条目，以使网格内可以向istio 服务网格之外的服务发出请求。
+- [Gateway](https://istio.io/docs/reference/config/networking/gateway/)：定义网格网关，对外发布服务（ingress）。通常和 Virtualservice 配合使用。
+- [EnvoyFilter](https://istio.io/docs/reference/config/networking/envoy-filter/)：扩展Envoy过滤器。Envoy支持Lua，可以动态改变Envoy的过滤链行为。EnvoyFilter提供了很灵活的扩展性。
+- [Sidecar](https://istio.io/docs/reference/config/networking/sidecar/)：默认情况下，Istiod将会把存在注入规则的namespace内的所有services的相关配置都下发给Enovy。通过Sidecar可以对istiod向Envoy Sidcar下发的配置进行更细粒度的调整。根据这个特性可以提高istiod的推送性能，降低sidecar的资源用量。
 
 
 
-[pod启动顺序]: ../images/pod启动顺序.jpeg
-[istio-init-iptables]: ../images/istio-init-iptables.PNG
-[istio-proxy启动过程]: ../images/istio-proxy启动过程.jpeg
-[拓扑图]: ../images/拓扑图.jpg
-[server监听端口]: ../images/server监听端口.png
-[grpc-svc]: ../images/grpc-svc.png
-[xDS术语]: ../images/xDS%E6%9C%AF%E8%AF%AD.jpg
-[server-svc.grpc.svc.cluster.local]: ../images/server-svc.grpc.svc.cluster.local.png
-[inbound8080]: ../images/inbound8080.png
+
+[pod启动顺序]: /images/pod启动顺序.jpeg
+[istio-init-iptables]: /images/istio-init-iptables.PNG
+[istio-proxy启动过程]: /images/istio-proxy启动过程.jpeg
+[拓扑图]: /images/拓扑图.jpg
+[server监听端口]: /images/server监听端口.png
+[grpc-svc]: /images/grpc-svc.png
+[xDS术语]: /images/xDS%E6%9C%AF%E8%AF%AD.jpg
+[server-svc.grpc.svc.cluster.local]: /images/server-svc.grpc.svc.cluster.local.png
+[inbound8080]: /images/inbound8080.png
+[outbound-server-svc]: /images/outbound-server-svc.grpc.svc.cluster.local.png
+[outbound-server-svc-detail]: /images/outbound-server-svc.grpc.svc.cluster.local-detail.png
+[inbound8080-detail]: /images/inbound8080-detail.png
+[BlackHoleCluster]: /images/BlackHoleCluster.png
+[PassthroughCluster]: /images/PassthroughCluster.png
+[eds]: /images/eds.png
+
