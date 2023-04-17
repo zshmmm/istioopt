@@ -103,6 +103,6 @@ spec:
         imagePullPolicy: IfNotPresent
 ```
 
-1. [ProxyConfig holdApplicationUntilProxyStarts 配置项](https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig)
+[^2]: [ProxyConfig holdApplicationUntilProxyStarts 配置项](https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig)
 
 [^1]: [Container Lifecycle Hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
