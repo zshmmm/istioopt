@@ -122,7 +122,7 @@ Router: Envoy的路由规则。Istio下发的路由规则中对每个端口设�
 istioctl pc r -n zhuzhu14 <podname>
 ```
 
-在前面 **OutboundListener** 章节中有一个8080的 **routeConfigName**。
+在前面 **[OutboundListener](https://github.com/zshmmm/istioopt/blob/main/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/istio%E6%B5%81%E9%87%8F%E8%B5%B0%E5%90%91.md#342-outboundlistener)** 章节中有一个8080的 **routeConfigName**。
 
 ```bash
 #查看
@@ -131,13 +131,14 @@ istioctl pc r -n zhuzhu14 <podname> --name 8080
 8080路由包含一个配置转发到 cluster: outbound|8080||server-svc.grpc.svc.cluster.local
 ![server-svc.grpc.svc.cluster.local][server-svc.grpc.svc.cluster.local]
 
-在 **VirtualInboundListener** 章节中有一个 **routeConfigName:inbound|8080||** 的配置，查看这个Route
+在 **[VirtualInboundListener](https://github.com/zshmmm/istioopt/blob/main/%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80/istio%E6%B5%81%E9%87%8F%E8%B5%B0%E5%90%91.md#343-virtualinboundlistener)** 章节中有一个 **routeConfigName:inbound|8080||** 的配置，查看这个Route
 
 ```bash
 istioctl pc r -n grpc server-7bc7fd5479-xvv99 --name 'inbound|8080||' -o json
 ```
 
 ![inbound8080][inbound8080]
+
 可以看到Cluster为：**inbound|8080||**
 
 
