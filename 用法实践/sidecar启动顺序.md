@@ -24,10 +24,10 @@ args: ["while [[ \"$(curl -s -o /dev/null -w ''%{http_code}'' localhost:15020/he
 为避免出现如上问题，理想的启动执行流程如下：
 
 1. Kubernetes 启动 envoy sidecar。
-2. Kubernetes 执行 postStart hook[^1]，postStart hook 通过 envoy 健康检查接口判断其配置初始化状态，直到 envoy 启动完成。
+2. Kubernetes 执行 postStart [hook]((https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/))，postStart hook 通过 envoy 健康检查接口判断其配置初始化状态，直到 envoy 启动完成。
 3. Kubernetes 启动应用容器。
 
-Istio 在 1.7 版本中增加该方案，增加 HoldApplicationUntilProxyStarts[^2]，配置开关(默认为false)，需要主动打开配置。
+Istio 在 1.7 版本中增加该方案，增加 [HoldApplicationUntilProxyStarts](https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig')，配置开关(默认为false)，需要主动打开配置。
 
 #### 2.2.1 全局配置方案
 
@@ -103,5 +103,13 @@ spec:
         imagePullPolicy: IfNotPresent
 ```
 
-[^1]: [Container Lifecycle Hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
-[^2]: [ProxyConfig holdApplicationUntilProxyStarts 配置项]('https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig')
+## 3. 思考
+
+如上方案都是通过控制 pod 中容器的启动顺序解决启动依赖的问题，是治标不治本的方法。同时kubernetes 在容器启动依赖的解决方案上也没有标准的方案。要彻底解决该类型问题，需要解耦应用服务之间的启动依赖关系并按照 “design for failure” 的原则对服务进行容错处理，使应用容器的启动不再强依赖其他服务。
+
+
+## 4. 参考
+1. [Container Lifecycle Hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/)
+2. [ProxyConfig holdApplicationUntilProxyStarts 配置项](https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig)
+3. [Allow users to delay application start until proxy is ready](https://github.com/istio/istio/pull/24737)
+4. [Delaying application start until sidecar is ready](https://medium.com/@marko.luksa/delaying-application-start-until-sidecar-is-ready-2ec2d21a7b74)
