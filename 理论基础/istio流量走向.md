@@ -227,9 +227,9 @@ istioctl pc ep -n zhuzhu14 grpc-client-7b7cc74485-6p6hf --cluster "outbound|8080
 
 
 
-[pod启动顺序]: /images/pod启动顺序.jpeg
+[pod启动顺序]: /images/pod启动顺序.jpg
 [istio-init-iptables]: /images/istio-init-iptables.PNG
-[istio-proxy启动过程]: /images/istio-proxy启动过程.jpeg
+[istio-proxy启动过程]: /images/istio-proxy启动过程.jpg
 [拓扑图]: /images/拓扑图.jpg
 [server监听端口]: /images/server监听端口.png
 [grpc-svc]: /images/grpc-svc.png
