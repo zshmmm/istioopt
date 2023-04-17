@@ -14,7 +14,7 @@
 
 ```yaml
 command: ["/bin/bash", "-c"]
-  args: ["while [[ \"$(curl -s -o /dev/null -w ''%{http_code}'' localhost:15020/healthz/ready)\" != '200' ]]; do echo Waiting for Sidecar;sleep 1; done; echo Sidecar available; start-app-cmd"]
+args: ["while [[ \"$(curl -s -o /dev/null -w ''%{http_code}'' localhost:15020/healthz/ready)\" != '200' ]]; do echo Waiting for Sidecar;sleep 1; done; echo Sidecar available; start-app-cmd"]
 ```
 
 不足：该方案可以规避依赖顺序的问题，但需要对应用容器的启动脚本进行修改，对 Envoy 的健康状态进行判断。更好的方案应该是应用对 Envoy sidecar 不感知。
@@ -28,7 +28,7 @@ command: ["/bin/bash", "-c"]
 2. Kubernetes 执行 postStart hook[^1]，postStart hook 通过 envoy 健康检查接口判断其配置初始化状态，直到 envoy 启动完成。
 3. Kubernetes 启动应用容器。
 
-Istio 在 1.7 版本中增加该方案，增加 `HoldApplicationUntilProxyStarts`[^2] 配置开关(默认为false)，需要主动配置打开。
+Istio 在 1.7 版本中增加该方案，增加 HoldApplicationUntilProxyStarts[^2] 配置开关(默认为false)，需要主动配置打开。
 
 #### 2.2.1 全局配置方案
 修改 istio 的 configmap 全局配置
