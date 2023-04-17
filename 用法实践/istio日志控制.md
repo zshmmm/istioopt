@@ -109,9 +109,12 @@ istioctl pc log grpc-client-6748f56bdc-n4zqn --level http2:debug
 istioctl pc log grpc-client-6748f56bdc-n4zqn --reset
 ```
 
+## 4. 思考
+
+istio 日志开启之后会降低 istio-proxy 性能，增加资源浪费，合理的日志开启配置需要平衡问题处理、性能、资源等多方面的因素。
 
 
-**参考文档**
+## 5. 参考文档
 - [Global Mesh Options](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig)
 - [Envoy Access Logs](https://istio.io/latest/docs/tasks/observability/logs/access-log/)
 - [Telemetry](https://istio.io/latest/docs/reference/config/telemetry/#Telemetry)
