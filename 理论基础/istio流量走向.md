@@ -20,4 +20,4 @@
 
 
 
-[istio-proxy启动顺序]: images/istio-proxy启动顺序.jpeg
+[istio-proxy启动顺序]: ../images/istio-proxy启动顺序.jpeg
