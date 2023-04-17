@@ -9,3 +9,4 @@
   * [istio 流量镜像](用法实践/istio流量镜像.md)
   * [istio 性能优化](用法实践/istio性能优化.md)
   * [sidecar 启动顺序](用法实践/sidecar启动顺序.md)
+  * [istio-proxy 优雅退出](用法实践/istio-proxy%E4%BC%98%E9%9B%85%E9%80%80%E5%87%BA.md)
