@@ -8,4 +8,4 @@
   * [istio 日志控制](用法实践/istio日志控制.md)
   * [istio 流量镜像](用法实践/istio流量镜像.md)
   * [istio 性能优化](用法实践/istio性能优化.md)
-  * [sidecar 启动顺序](用法实践/sidecare启动顺序.md)
+  * [sidecar 启动顺序](用法实践/sidecar启动顺序.md)
