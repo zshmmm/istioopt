@@ -36,8 +36,6 @@ resources:
 
 ### 2.2 HPA 配置实践（基于CPU）
 
-HPA CPU 配置最佳实践
-
 |资源档位|request(app + istio-proxy)|HPA阈值|
 |:---:|---:|---:|
 |一档|[0.2,0.6)|<=200%|
@@ -48,8 +46,6 @@ HPA CPU 配置最佳实践
 
 
 ### 2.3 limit 配置实践（基于CPU）
-
-HPA limit 配置最佳实践
 
 |资源档位|request(app + istio-proxy)|limit 配置|
 |:---:|---:|---:|
@@ -77,7 +73,7 @@ HPA limit 配置最佳实践
 
 ## 3. 具体配置
 
-istio-proxy 的资源配置在注解中：
+istio-proxy 的资源配置在相应的 k8s 负载注解中：
 
 ```yaml
 annotations:
