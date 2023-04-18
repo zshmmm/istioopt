@@ -69,11 +69,11 @@ HPA limit 配置最佳实践
 ### 2.5 资源指标
 
 1. 容器 CPU 使用指标 `container_cpu_usage_seconds_total`
-    计算应用容器与 sidecar 的 CPU 使用比：(sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$",image!="",container="service"}[1m])) by (cluster)) / (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$",image!="",container="istio-proxy"}[1m])) by (cluster))
+    计算应用容器与 sidecar 的 CPU 使用比：`(sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$",image!="",container="service"}[1m])) by (cluster)) / (sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$",image!="",container="istio-proxy"}[1m])) by (cluster))`
 2. 容器 memory 使用指标 `container_memory_usage_bytes`
-    最后7天最大内存：max(max_over_time(sum(container_memory_usage_bytes{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$", container=~"istio-proxy|service"}) by (cluster, pod, container)[7d:])) by (cluster, container)
+    最后7天最大内存：`max(max_over_time(sum(container_memory_usage_bytes{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$", container=~"istio-proxy|service"}) by (cluster, pod, container)[7d:])) by (cluster, container)`
 3. POD 请求数 `istio_requests_total`
-    单核 istio-proxy CPU 能够处理的 QPS：sum(rate(istio_requests_total{reporter="destination",cluster=~"$cluster",app="$app"}[1m])) / sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$",image!="",container=~"istio-proxy"}[1m]))
+    单核 istio-proxy CPU 能够处理的 QPS：`sum(rate(istio_requests_total{reporter="destination",cluster=~"$cluster",app="$app"}[1m])) / sum(rate(container_cpu_usage_seconds_total{cluster=~"$cluster",pod=~"^$app-[a-z0-9]+-[a-z0-9]+$",image!="",container=~"istio-proxy"}[1m]))`
 
 ## 3. 具体配置
 
