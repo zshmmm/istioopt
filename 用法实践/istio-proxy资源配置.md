@@ -38,7 +38,7 @@ resources:
 
 HPA CPU 配置最佳实践
 
-|资源档位|request(app request + istio-proxy request)|HPA阈值|
+|资源档位|request(app + istio-proxy)|HPA阈值|
 |:---:|---:|---:|
 |一档|[0.2,0.6)|<=200%|
 |二挡|[0.6,1.5)|<=150%|
@@ -51,7 +51,7 @@ HPA CPU 配置最佳实践
 
 HPA limit 配置最佳实践
 
-|资源档位|request(app request + istio-proxy request)|limit 配置|
+|资源档位|request(app + istio-proxy)|limit 配置|
 |:---:|---:|---:|
 |一档|[0.2,0.6)|request * 4|
 |二挡|[0.6,1.5)|request * 3|
