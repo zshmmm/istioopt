@@ -80,10 +80,11 @@ HPA limit 配置最佳实践
 istio-proxy 的资源配置在注解中：
 
 ```yaml
-    sidecar.istio.io/proxyCPU: "0.3"
-    sidecar.istio.io/proxyCPULimit: "1"
-    sidecar.istio.io/proxyMemory: 512Mi
-    sidecar.istio.io/proxyMemoryLimit: 1Gi
+annotations:
+  sidecar.istio.io/proxyCPU: "0.3"
+  sidecar.istio.io/proxyCPULimit: "1"
+  sidecar.istio.io/proxyMemory: 512Mi
+  sidecar.istio.io/proxyMemoryLimit: 1Gi
 ```
 
 ## 4. 思考
@@ -93,7 +94,7 @@ istio 的复杂性，引入后必然在稳定性上带来更多的问题，同�
 当想引入 istio 时，需要重新思考如下几个问题：
 1. 当前是引入 istio 的时期么？
 2. 哪些特性是必须由 istio 来提供么？
-3. istio 引入带来的优势大于资源的消耗么？
+3. istio 引入带来的好处大于资源的消耗么？
 4. 有专业的团队进行支撑么？
 
 ## 5. 参考
