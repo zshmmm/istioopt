@@ -103,6 +103,8 @@ spec:
         imagePullPolicy: IfNotPresent
 ```
 
+**注意：istio 不会一直排水，最终 sidecar 在 `terminationGracePeriodSeconds` 时间后被 Kill 掉**
+
 ## 3. 思考
 
 该配置是在应用已经正确实现“优雅退出”的前提下的配置，优雅退出在云原生环境中的重要性不容忽视，正确的实现优雅退出在更新、重启、缩扩容的情况下不会中断用户体验和业务流程。因此优雅退出，有助于提高系统的稳定性和可用性。
