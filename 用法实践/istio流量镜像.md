@@ -128,8 +128,8 @@ spec:
 
 ## 4. 参考
 
-[VirtualService Destination](https://istio.io/latest/docs/reference/config/networking/virtual-service/#Destination)
-[istio Mirroring](https://istio.io/latest/docs/tasks/traffic-management/mirroring/)
+1. [VirtualService Destination](https://istio.io/latest/docs/reference/config/networking/virtual-service/#Destination)
+2. [istio Mirroring](https://istio.io/latest/docs/tasks/traffic-management/mirroring/)
 
 
 [istio流量镜像图]: /images/istio流量镜像图.jpeg
