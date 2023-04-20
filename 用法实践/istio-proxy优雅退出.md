@@ -103,7 +103,7 @@ spec:
         imagePullPolicy: IfNotPresent
 ```
 
-**注意：istio 不会一直排水，最终 sidecar 在 `terminationGracePeriodSeconds` 时间后被 Kill 掉**
+**注意：istio-proxy 不会一直排水，最终 sidecar 在 `terminationGracePeriodSeconds` 时间后被 Kill 掉**
 
 ## 3. 思考
 
