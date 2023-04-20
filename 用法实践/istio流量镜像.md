@@ -51,6 +51,23 @@ spec:
 
 > Destination indicates the network addressable service to which the request/connection will be sent after processing a routing rule. The destination.host should unambiguously refer to a service in the service registry. Istio’s service registry is composed of all the services found in the platform’s service registry (e.g., Kubernetes services, Consul services), as well as services declared through the ServiceEntry resource.
 
+创建 ServiceEntry 资源
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: mirror-cluster-b
+spec:
+  hosts:
+  - clusterB.cn-bj.B-staging.mycompany.com
+  location: MESH_EXTERNAL  #表示该服务在网格外部
+  ports:
+  - number: 8000
+    name: http80
+    protocol: HTTP
+  resolution: DNS
+```
 
 #### 2.1.2 clusterB 配置
 
