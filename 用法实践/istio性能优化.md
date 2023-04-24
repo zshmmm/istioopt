@@ -43,6 +43,7 @@ spec:
 
 如上配置 istid 只推送 grpc 和 istio-system namespace 内负载的 xDS 到 grpc namespace 下的工作负载。减少 xDS 的推送量，提高推送效率。
 
+思考：手动调整 Sidecar 遗漏引发问题，如何动态的根据请求自动调整 Sidecar 才是解决的根本方案（懒加载）。
 
 ### 1.2 istiod 资源配置
 
