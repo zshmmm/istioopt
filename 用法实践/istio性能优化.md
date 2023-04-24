@@ -20,8 +20,10 @@ istiod xDS 推送相关的几个环境变量:
 
 istio 默认会将集群内所有发现的资源通过 xDS 下发给 istio-proxy，为减少不相干 xDS 的推送，可以通过 Sidecar 资源来精确配置工作负载的访问规则。间接上降低 xDS 到工作负载的下发量。
 
-**注意：新增的集群内的访问需要修改 Sidecar 来实现负载通信，否则请求将根据 `outboundTrafficPolicy` 的配置来确认是否转发流量到网格外**
+> **注意：新增的集群内的访问需要修改 Sidecar 来实现负载通信，否则请求将根据 `outboundTrafficPolicy` 的配置来确认是否转发流量到网格外**
+>
 > **如果配置为：`REGISTRY_ONLY`，则服务不可访问**
+>
 > **如果配置为：`ALLOW_ANY`，则服务可以访问，只不过是通过 k8s svc 的方式访问**
 
 具体配置
