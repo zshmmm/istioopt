@@ -16,6 +16,31 @@ istiod xDS 推送相关的几个环境变量:
 
 在大集群中，增加并发推送数，增加防抖推送间隔，降低推送等待最长时间，可以有效的缓解 xDS 推送压力，同时更及时的推送 xDS 到 istio-proxy。
 
+**2. 通过 Sidecar 降低 xDS 推送大小**
+
+istio 默认会将集群内所有发现的资源通过 xDS 下发给 istio-proxy，为减少不相干 xDS 的推送，可以通过 Sidecar 资源来精确配置工作负载的访问规则。间接上降低 xDS 到工作负载的下发量。
+
+**注意：新增的集群内的访问需要修改 Sidecar 来实现负载通信，否则请求将根据 `outboundTrafficPolicy` 的配置来确认是否转发流量到网格外**
+> **如果配置为：`REGISTRY_ONLY`，则服务不可访问**
+> **如果配置为：`ALLOW_ANY`，则服务可以访问，只不过是通过 k8s svc 的方式访问**
+
+具体配置
+
+```yaml
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  name: default
+  namespace: grpc
+spec:
+  egress:
+  - hosts:
+    - ./*
+    - istio-system/*
+```
+
+如上配置 istid 只推送 grpc 和 istio-system namespace 内负载的 xDS 到 grpc namespace 下的工作负载。减少 xDS 的推送量，提高推送效率。
+
 
 ### 1.2 istiod 资源配置
 
@@ -40,3 +65,5 @@ istiod 与网格内 istio-proxy 使用 gRPC 长链接进行通信，引起 istio
 ## 4. 参考
 
 1. [Better load balancing of Envoys across Pilot instances](https://github.com/istio/istio/issues/11181)
+2. [pilot-discovery 环节变量](https://istio.io/latest/docs/reference/commands/pilot-discovery/#envvars)
+3. [SideCar](https://istio.io/latest/docs/reference/config/networking/sidecar/)
