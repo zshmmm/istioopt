@@ -33,12 +33,12 @@ istio 官方建议使用 `istioctl install` 方式安装。
 
 `istioctl install --set profile=<mode>` 安装配置档有几种，按照配置差异如下：
 
-||default|demo|minimal|remote|empty|preview|
+| |default|demo|minimal|remote|empty|preview|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |核心组件||||||
-|istio-egressgateway||√|||||
-|istio-ingressgateway|√|√||||√|
-|istiod|√|√|√|||√|
+|istio-egressgateway| |√| | | | |
+|istio-ingressgateway|√|√| | | |√|
+|istiod|√|√|√| | |√|
 
 
 
