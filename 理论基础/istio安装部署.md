@@ -144,12 +144,6 @@ spec:
           value: "500ms"
         - name: PILOT_DEBOUNCE_MAX
           value: "3s"
-        - name: PILOT_REMOTE_CLUSTER_TIMEOUT
-          value: "0"
-        - name: PILOT_ENABLE_CROSS_CLUSTER_WORKLOAD_ENTRY
-          value: "false"
-        - name: PILOT_USE_ENDPOINT_SLICE
-          value: "false"
         - name: PILOT_PUSH_THROTTLE
           value: "200"
         - name: PILOT_FILTER_GATEWAY_CLUSTER_CONFIG
