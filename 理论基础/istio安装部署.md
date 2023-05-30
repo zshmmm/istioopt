@@ -348,7 +348,7 @@ kubect get pods -n grpc
 # server-64d78996b4-lttb8        2/2     Running       0          18m
 ```
 
-### 2.4 安装 istio 网关
+### 2.5 安装 istio 网关
 出站网关用途较少，本文不涉及出站网关的安装部署。
 网关因为支持定义多个入站网关，所以它是一种特殊类型的组件。 在 IstioOperator API 中，网关被定义为列表类型，配置路径为：`spec.components.ingressGateways`。 default 配置档会安装一个名为 istio-ingressgateway 的入站网关。
 查看默认网关的默认值：
@@ -358,7 +358,7 @@ istioctl profile dump --config-path components.ingressGateways
 istioctl profile dump --config-path values.gateways.istio-ingressgateway
 ```
 
-#### 2.4.1 创建网关
+#### 2.5.1 创建网关
 新网关可以通过添加新的网关列表条目来创建：
 
 ```yaml
@@ -411,7 +411,7 @@ istioctl verify-install -f istio-1.14-resource.yaml
 
 内置的网关就像其他组件一样的可以被定制。但是 `spec.values.gateways.istio-ingressgateway/egressgateway` 被所有的入站网关共享。如果每个网关的配置需要定制，需要使用一个独立 IstioOperator CR 来生成用户网关的清单，并和 Istio 主安装清单隔离。
 
-#### 2.4.2 创建独立的 IstioOperator CR 网关
+#### 2.5.2 创建独立的 IstioOperator CR 网关
 因为集群已经安装了 istio 的组件，如果仅仅部署网关时，使用 `empty` 的 profile 来创建独立网关。
 
 ```yaml
@@ -455,7 +455,7 @@ istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingre
 ```
 
 
-### 2.5 配置档文件管理最佳实践
+### 2.6 配置档文件管理最佳实践
 
 关于配置档文件管理的最佳实践：
 1. 使用 `minimal` 配置模式生成基础配置文件
@@ -491,7 +491,9 @@ istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingre
 ## 4. 参考
 
 [通过 istioctl 安装部署 istio](https://istio.io/v1.14/docs/setup/install/istioctl/)
+
 [IstioOperator Options](https://istio.io/v1.14/zh/docs/reference/config/istio.operator.v1alpha1/)
+
 [istio 证书](https://istio.io/v1.14/docs/tasks/security/cert-management/plugin-ca-cert/)
 
 
