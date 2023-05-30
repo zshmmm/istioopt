@@ -454,6 +454,16 @@ spec:
 istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingress-gateway-empty.yaml 
 ```
 
+#### 2.5.3 卸载网关
+
+卸载网关只需要将相应网关禁用即可，配置路径：`spec.components.ingressGateways.[相应网关].enabled` 调整为 `false`
+使用 istioctl 变更配置
+```bash
+# 变更配置，被禁用的网关会被卸载（包括关联的资源）
+istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingress-gateway-empty.yaml 
+```
+
+同理，其他组件的卸载只需禁用相应组件，然后重新应用一次配置文件即可。不建议通过 kubectl 管理资源的方式来处理 istio 组件资源，因为每个组件的关联资源无法进行统一处理。
 
 ### 2.6 配置档文件管理最佳实践
 
