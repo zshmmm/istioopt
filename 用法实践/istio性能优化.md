@@ -45,6 +45,20 @@ spec:
 
 思考：手动调整 Sidecar 遗漏引发问题，如何动态的根据请求自动调整 Sidecar 才是解决的根本方案（懒加载）。
 
+**3. 通过 discoverySelectors 配置减少服务发现的数量**
+istio 默认情况下会自动发现集群内所有服务，并生成相应的 xDS 信息，可以通过 istio 配置发现哪些 namespace 中的服务来减少 xDS 信息。
+同样，不在网格内的服务根据 `outboundTrafficPolicy` 配置来决定是否转发流量。
+
+在 istio configmap 中 `data.mesh.discoverySelectors` 路径中增加如下配置
+
+```yaml
+    - matchExpressions:
+      - key: discovery/ignore
+        operator: DoesNotExist
+```
+
+表示不自动发现包含 `discovery/ignore` 标签的 namespace 的服务。
+
 ### 1.2 istiod 资源配置
 
 istiod 的资源配置没有一个通用的合理配置，需要根据实际使用情况来调整，随着网格资源的增加，istiod 需要提高资源配置。
