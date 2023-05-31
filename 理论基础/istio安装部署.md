@@ -496,6 +496,7 @@ istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingre
 
 1. [通过 istioctl 安装部署 istio](https://istio.io/v1.14/docs/setup/install/istioctl/)
 2. [IstioOperator Options](https://istio.io/v1.14/zh/docs/reference/config/istio.operator.v1alpha1/)
+3. [Helm installation options](https://istio.io/v1.5/docs/reference/config/installation-options/#global-options)
 3. [istio 证书](https://istio.io/v1.14/docs/tasks/security/cert-management/plugin-ca-cert/)
 
 
