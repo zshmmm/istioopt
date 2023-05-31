@@ -6,6 +6,7 @@
   * [istio 流量走向](理论基础/istio流量走向.md)
 * [用法实践](用法实践/README.md)
   * [istio 日志控制](用法实践/istio日志控制.md)
+  * [istio 证书替换](用法实践/istio%20%E9%9B%86%E7%BE%A4%E8%AF%81%E4%B9%A6%E6%9B%BF%E6%8D%A2.md)
   * [istio 流量镜像](用法实践/istio流量镜像.md)
   * [istio 性能优化](用法实践/istio性能优化.md)
   * [显式配置服务协议](用法实践/%E6%98%BE%E5%BC%8F%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE.md)
