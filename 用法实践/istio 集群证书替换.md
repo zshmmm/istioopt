@@ -54,7 +54,7 @@ kubectl rollout restart deployment -n istio-system istiod
 # 等待 istiod 全部重启完成
 ```
 
-### 3.2 开启 mTLS
+### 3.3 开启 mTLS
 
 如果只是部分服务注入了 Envoy sidecar 的情况。对于一个已注入 sidecar 的服务而言，一旦开启服务的双向 TLS 通信模式，那么没有注入 Envoy sidecar 的负载将无法与注入了 Envoy sidecar 的负载通信。为了解决这个问题，Istio 认证策略提供了一种 “PERMISSIVE” 模式。
 
