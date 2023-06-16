@@ -45,6 +45,13 @@ spec:
 
 思考：手动调整 Sidecar 遗漏引发问题，如何动态的根据请求自动调整 Sidecar 才是解决的根本方案（懒加载）。
 
+使用规范：
+1. 每个命名空间只能有一个没有任何workloadSelector的Sidecar配置，为该命名空间中的所有pod指定默认值。建议将命名空间范围内的Sidecar命名为default。如果给定命名空间中存在多个无选择器的Sidecar配置，则系统的行为将不确定。如果两个或更多具有workloadSelector的Sidecar配置选择相同的工作负载实例，则系统的行为将不确定。
+
+2. MeshConfig根命名空间中的Sidecar配置将默认应用于没有Sidecar配置的所有命名空间。此全局默认Sidecar配置不应具有任何workloadSelector。
+
+3. 尽管网关是istio-proxies，但还是不能将Sidecar应用于网关。
+
 **3. 通过 discoverySelectors 配置减少服务发现的数量**
 istio 默认情况下会自动发现集群内所有服务，并生成相应的 xDS 信息，可以通过 istio 配置发现哪些 namespace 中的服务来减少 xDS 信息。
 同样，不在网格内的服务根据 `outboundTrafficPolicy` 配置来决定是否转发流量。

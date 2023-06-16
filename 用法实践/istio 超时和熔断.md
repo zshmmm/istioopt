@@ -124,7 +124,7 @@ istioctl pc endpoint forecast-v1-869876d4f4-4tp4m --cluster "outbound|3005|v1|re
 
 ## 4. 思考
 
-1. 如果将 recommendation 副本数降低到 1 个或者 2 个时会发生什么？不可用 endpoint 会被踢掉么？答案是否定的，被踢掉多少和 "恐慌值" (maxEjectionPercent: 50 # 恐慌值，最多剔除百分比的不可用 endpoint) 有关，最大不能大于踢掉恐慌值的比例。
+1. 如果将 recommendation 副本数降低到 1 个或者 2 个时会发生什么？不可用 endpoint 会被踢掉么？答案是否定的，被踢掉多少和 "恐慌值" (maxEjectionPercent: 50 # 恐慌值，最多剔除百分比的不可用 endpoint) 有关，最大不能超过踢掉恐慌值的比例。
 
 2. 合理的超时策略和熔断策略能够提高业务的稳定性，这也是 istio 能够带来的好处之一。
 

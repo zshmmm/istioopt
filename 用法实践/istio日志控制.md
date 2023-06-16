@@ -65,6 +65,10 @@ spec:
     - name: jsonlog
 ```
 
+使用规范：
+1. MeshConfig根命名空间中的 Telemetry 配置将默认应用于没有 Telemetry 配置的所有命名空间。
+2. 更细颗粒度的配置会优先被应用
+
 ## 2. 开启特定负载日志
 
 ### 2.1 通过 Telemetry 开启特定负载日志
