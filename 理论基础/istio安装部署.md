@@ -411,6 +411,8 @@ istioctl verify-install -f istio-1.14-resource.yaml
 ```yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
+metadata:
+  name: grpc-ingress-gateway-user
 spec:
   profile: empty
   tag: 1.14.6
