@@ -121,7 +121,7 @@ istioctl pc endpoint forecast-v1-869876d4f4-4tp4m --cluster "outbound|3005|v1|re
 ```
 可以看到不存在的 pod 的 endpoint 被熔断掉了。同时请求也会变快，不会被卡主，因为 tcp 层面连接超时只有 100ms ，加快了故障感知熔断。
 
-## 4 全局默认配置
+## 4. 全局默认配置
 
 上面的配置是针对单个应用的，集群中存在大量的应用，如何为存量的应用配置默认超时和熔断，在应用配置时又可以以应用的配置为主呢？ istiod 提供一个环境变量 `PILOT_ENABLE_DESTINATION_RULE_INHERITANCE` 来控制 DR role 的继承。该变量默认是关闭的，需要先开启。
 开启后在 istio 的 rootNamespace 中创建一个 host 为空的 DR 资源（注意：必须先开启 DR Role 功能，否则无法创建 host 为空的 DR）。
