@@ -111,7 +111,7 @@ spec:
 
 ## 4. 参考
 
-1. [terminationGracePeriodSeconds配置](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/)
-2. [terminationGracePeriodSeconds配置](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
+1. [terminationGracePeriodSeconds配置](https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/)
+2. [Pod Lifecycle配置](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/)
 3. [EXIT_ON_ZERO_ACTIVE_CONNECTIONS配置](https://istio.io/v1.14/docs/reference/commands/pilot-agent/)
-4. [proxyMetadata配置](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/)
+4. [proxyMetadata配置](https://istio.io/v1.14/docs/reference/config/istio.mesh.v1alpha1/)
