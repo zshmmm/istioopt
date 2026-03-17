@@ -6,16 +6,15 @@ Auther: @雄哥
 
 envoy 会将流量复制一份影子流量发到分支服务，和正常流量的区别是对于分支服务发送影子流量后不会处理其返回响应。envoy 通过对请求头的 host 值标记（镜像流量会在原流量的 host 上加上 `-shadow` 的后缀）来区分分支服务的影子流量和正常服务流量。
 
-![istio流量镜像图][istio流量镜像图]
+![istio流量镜像图](../.gitbook/assets/istio流量镜像图.jpeg)
 
 以上图为例，镜像流量的 host 是 http://myservice-test.mycompany.com，其将被修改为myservice-backend.company.com-shadow。（如果服务中有对请求头的host进行处理需要注意这点）
 
 ## 2. 跨集群流量镜像配置
 
-基于网关层做流量镜像一般多是用于为预发布环境导入线上真实流量，所以多是跨集群中使用到。
-这里以源集群 clusterA 和目标集群 clusterB 命名，主体请求在 clusterA，由 clusterA 网关将流量镜像复制到 clusterB，如下图：
+基于网关层做流量镜像一般多是用于为预发布环境导入线上真实流量，所以多是跨集群中使用到。 这里以源集群 clusterA 和目标集群 clusterB 命名，主体请求在 clusterA，由 clusterA 网关将流量镜像复制到 clusterB，如下图：
 
-![istio流量镜像拓扑]
+![istio流量镜像拓扑](../.gitbook/assets/istio流量镜像流量拓扑图.jpg)
 
 ### 2.1 流量镜像配置
 
@@ -141,13 +140,7 @@ spec:
 
 ## 3. 思考
 
-
-
 ## 4. 参考
 
 1. [VirtualService Destination](https://istio.io/latest/docs/reference/config/networking/virtual-service/#Destination)
 2. [istio Mirroring](https://istio.io/latest/docs/tasks/traffic-management/mirroring/)
-
-
-[istio流量镜像图]: /images/istio流量镜像图.jpeg
-[istio流量镜像拓扑]: /images/istio%E6%B5%81%E9%87%8F%E9%95%9C%E5%83%8F%E6%B5%81%E9%87%8F%E6%8B%93%E6%89%91%E5%9B%BE.jpg

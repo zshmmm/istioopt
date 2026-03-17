@@ -1,4 +1,4 @@
-# istio 超时和熔断
+# istio 超时熔断
 
 ## 1. 背景
 
@@ -42,7 +42,7 @@ spec:
 
 recommendation 应用有5个副本，调整副本数到3个，由于 forecast-v1 与 istiod 无法通信，获取不到最小的 xDS(无法更新 EDS)，即获取不到 recommendation 服务最新的 endpoints 。环境如下图所示
 
-![验证环境][超时熔断测试环境]
+![验证环境](../.gitbook/assets/istio熔断环境.png)
 
 ```bash
 # recommendation 副本数，5 个 pod
@@ -119,12 +119,12 @@ istioctl pc endpoint forecast-v1-869876d4f4-4tp4m --cluster "outbound|3005|v1|re
 # 10.42.2.13:3005     HEALTHY     OK                outbound|3005|v1|recommendation.weather.svc.cluster.local
 # 10.42.2.6:3005      HEALTHY     OK                outbound|3005|v1|recommendation.weather.svc.cluster.local
 ```
+
 可以看到不存在的 pod 的 endpoint 被熔断掉了。同时请求也会变快，不会被卡主，因为 tcp 层面连接超时只有 100ms ，加快了故障感知熔断。
 
 ## 4. 全局默认配置
 
-上面的配置是针对单个应用的，集群中存在大量的应用，如何为存量的应用配置默认超时和熔断，在应用配置时又可以以应用的配置为主呢？ istiod 提供一个环境变量 `PILOT_ENABLE_DESTINATION_RULE_INHERITANCE` 来控制 DR role 的继承。该变量默认是关闭的，需要先开启。
-开启后在 istio 的 rootNamespace 中创建一个 host 为空的 DR 资源（注意：必须先开启 DR Role 功能，否则无法创建 host 为空的 DR）。
+上面的配置是针对单个应用的，集群中存在大量的应用，如何为存量的应用配置默认超时和熔断，在应用配置时又可以以应用的配置为主呢？ istiod 提供一个环境变量 `PILOT_ENABLE_DESTINATION_RULE_INHERITANCE` 来控制 DR role 的继承。该变量默认是关闭的，需要先开启。 开启后在 istio 的 rootNamespace 中创建一个 host 为空的 DR 资源（注意：必须先开启 DR Role 功能，否则无法创建 host 为空的 DR）。
 
 ```yaml
 # file-name connect-timeout-global.yaml
@@ -201,18 +201,11 @@ istioctl pc cluster -n grpc grpc-client-b485bcdf7-rx5pj --fqdn server-svc.grpc.s
 ## 5. 思考
 
 1. 如果将 recommendation 副本数降低到 1 个或者 2 个时会发生什么？不可用 endpoint 会被踢掉么？答案是否定的，被踢掉多少和 "恐慌值" (maxEjectionPercent: 50 # 恐慌值，最多剔除百分比的不可用 endpoint) 有关，最大不能超过踢掉恐慌值的比例。
-
 2. 合理的连接超时策略和熔断策略能够提高业务的稳定性，这也是 istio 能够带来的好处之一。
-
 3. 本配置并不能从根本上解决 xDS 推送延迟问题，只能缓解带来的影响（xDS 推送一定会有延迟，合理的超时和熔断可以从根本上缓解带来的问题）。
-
 4. 连接超时可以通过 DR 默认配置，请求超时是 VS 来控制的，配置默认的请求超时也可以触发熔断。由于当前无法配置全局的 VS，istiod 提供了一个默认的环境变量 `ISTIO_DEFAULT_REQUEST_TIMEOUT` 来控制请求超时，默认为 0s (永不超时)。配置一个合理的请求超时策略同样能够提高业务稳定性，这同样也是 istio 能够带来的好处之一。 （注意：应用有 VS 时该配置才会生效）
-
 
 ## 6. 参考
 
 1. [熔断](https://istio.io/v1.14/docs/reference/config/networking/destination-rule/#OutlierDetection)
 2. [pilot-discovery 配置](https://istio.io/v1.14/docs/reference/commands/pilot-discovery/)
-
-
-[超时熔断测试环境]: /images/istio熔断环境.png

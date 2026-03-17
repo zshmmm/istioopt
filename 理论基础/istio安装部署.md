@@ -1,12 +1,12 @@
-# 安装部署
+# istio 安装部署
 
 本教程以 1.14 版本为例。
 
 ## 1. 下载
+
 istio 部署包可以通过如下两种方式下载
-1. 官方页面下载
-istio 版本发布页面：https://github.com/istio/istio/releases
-在版本发布页面下载 1.14.6 版本
+
+1. 官方页面下载 istio 版本发布页面：https://github.com/istio/istio/releases 在版本发布页面下载 1.14.6 版本
 
 ```bash
 mkdir -p /data/opt/k8s/istio/learn
@@ -29,16 +29,17 @@ ln -s /data/opt/k8s/istio/learn/istio-1.14.6/bin/istioctl /usr/sbin/
 ```
 
 ## 2. 安装部署
+
 istio 官方建议使用 `istioctl install` 方式安装。
 
 `istioctl install --set profile=<mode>` 安装配置档有几种，按照配置差异如下：
 
-|配置档|default|demo|minimal|remote|empty|preview|
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-|核心组件||||||
-|istio-egressgateway| |√| | | | |
-|istio-ingressgateway|√|√| | | |√|
-|istiod|√|√|√| | |√|
+|          配置档         | default | demo | minimal | remote | empty | preview |
+| :------------------: | :-----: | :--: | :-----: | :----: | :---: | :-----: |
+|         核心组件         |         |      |         |        |       |         |
+|  istio-egressgateway |         |   √  |         |        |       |         |
+| istio-ingressgateway |    √    |   √  |         |        |       |    √    |
+|        istiod        |    √    |   √  |    √    |        |       |    √    |
 
 支持的配置模式可以使用如下命令获取
 
@@ -47,11 +48,10 @@ istioctl profile list
 ```
 
 ### 2.1 生成证书文件
-默认情况下，Istio CA 会生成一个自签名的根证书和密钥，并使用它们来签署工作负载证书。如果只是测试使用使用默认证书也不会有问题。为了保护根 CA 密钥，或者多集群互信，在部署 istio 之前应该先生成根CA，并使用根 CA 向运行在每个集群上的 Istio CA 签发中间证书。Istio CA 可以使用管理员指定的证书和密钥来签署工作负载证书，并将管理员指定的根证书作为信任根分配给工作负载。
-如果之前漏掉了本步骤，后续文章中会介绍如何为运行中的 istio 集群替换证书。
-正常情况下应该使用公司根 CA 签发 istio 根证书，并由 istio 根证书签发 istio 集群证书，整体证书签发如下：
 
-![istio CA 证书链][istio-CA-chain]
+默认情况下，Istio CA 会生成一个自签名的根证书和密钥，并使用它们来签署工作负载证书。如果只是测试使用使用默认证书也不会有问题。为了保护根 CA 密钥，或者多集群互信，在部署 istio 之前应该先生成根CA，并使用根 CA 向运行在每个集群上的 Istio CA 签发中间证书。Istio CA 可以使用管理员指定的证书和密钥来签署工作负载证书，并将管理员指定的根证书作为信任根分配给工作负载。 如果之前漏掉了本步骤，后续文章中会介绍如何为运行中的 istio 集群替换证书。 正常情况下应该使用公司根 CA 签发 istio 根证书，并由 istio 根证书签发 istio 集群证书，整体证书签发如下：
+
+![istio CA 证书链](../.gitbook/assets/istio证书链.png)
 
 是一个三层的证书链，本文档为简化操作步骤，直接使用 istio 提供的证书工具进行证书生成，生成的证书是一个两层证书链（不包含最高的公司根CA）
 
@@ -101,6 +101,7 @@ kubectl create secret generic cacerts -n istio-system \
 证书生成完成后回到 istio 按照包根目录。
 
 ### 2.2 生产配置档配置文件
+
 在生产环境中，推荐使用 `minimal` 配置模式安装，然后修改相关配置。将配置进行版本化管理，任何调整都记录到配置文件。
 
 ```bash
@@ -111,10 +112,7 @@ cd install/istio-1.14
 istioctl profile dump minimal > istio-1.14.yaml
 ```
 
-配置档文件是一个 `IstioOperator` CR，文件中包含6个组件(base, pilot, ingressGateways, egressGateways, cni, istiodRemote)，针对每一个组件的配置内容通过 `spec.components.<componet name>` 下的 API 中提供。所有的组件共享一个通用 API，用来修改 Kubernetes 特定的设置，它在 `spec.components.<component name>.k8s` 路径下，所有这些 k8s 的配置项设置均使用 Kubernetes API 相同的定义。
-istio configmap 的配置在 `spec.meshConfig` 下的 API 中提供。
-其他配置在 `spec.values.global` 路径下，比如 proxy、proxy_init 等的资源、镜像、HPA等配置。
-一份调整(主要是根据往期文章优化相关方面的配置)过后的配置文件如下：
+配置档文件是一个 `IstioOperator` CR，文件中包含6个组件(base, pilot, ingressGateways, egressGateways, cni, istiodRemote)，针对每一个组件的配置内容通过 `spec.components.<componet name>` 下的 API 中提供。所有的组件共享一个通用 API，用来修改 Kubernetes 特定的设置，它在 `spec.components.<component name>.k8s` 路径下，所有这些 k8s 的配置项设置均使用 Kubernetes API 相同的定义。 istio configmap 的配置在 `spec.meshConfig` 下的 API 中提供。 其他配置在 `spec.values.global` 路径下，比如 proxy、proxy\_init 等的资源、镜像、HPA等配置。 一份调整(主要是根据往期文章优化相关方面的配置)过后的配置文件如下：
 
 ```yaml
 apiVersion: install.istio.io/v1alpha1
@@ -310,6 +308,7 @@ spec:
 ```
 
 ### 2.3 生成清单文件
+
 在 istio 安装前，使用 `istioctl manifest generate --set profile=<mode>` 命令生成清单文件，生成的清单文件可用于检查具体安装了什么。
 
 **注意：** 虽然生成的文件可以直接通过 `kubectl apply` 的方式部署，但是请不要这样做！！因为不能保障将相同的依赖顺序应用于资源， 并且也没有在 Istio 发行版中测试过。
@@ -343,9 +342,8 @@ kubect get pods -n grpc
 ```
 
 ### 2.5 安装 istio 网关
-出站网关用途较少，本文不涉及出站网关的安装部署。
-网关因为支持定义多个入站网关，所以它是一种特殊类型的组件。 在 IstioOperator API 中，网关被定义为列表类型，配置路径为：`spec.components.ingressGateways`。 default 配置档会安装一个名为 istio-ingressgateway 的入站网关。
-查看默认网关的默认值：
+
+出站网关用途较少，本文不涉及出站网关的安装部署。 网关因为支持定义多个入站网关，所以它是一种特殊类型的组件。 在 IstioOperator API 中，网关被定义为列表类型，配置路径为：`spec.components.ingressGateways`。 default 配置档会安装一个名为 istio-ingressgateway 的入站网关。 查看默认网关的默认值：
 
 ```bash
 istioctl profile dump --config-path components.ingressGateways
@@ -353,6 +351,7 @@ istioctl profile dump --config-path values.gateways.istio-ingressgateway
 ```
 
 #### 2.5.1 创建网关
+
 新网关可以通过添加新的网关列表条目来创建：
 
 ```yaml
@@ -392,6 +391,7 @@ spec:
 ```
 
 创建网关
+
 ```bash
 # 创建之前先生成资源清单
 istioctl manifest generate  -f istio-1.14.yaml -f istio-ingress-gateway.yaml > istio-1.14-resource.yaml
@@ -406,6 +406,7 @@ istioctl verify-install -f istio-1.14-resource.yaml
 内置的网关就像其他组件一样的可以被定制。但是 `spec.values.gateways.istio-ingressgateway/egressgateway` 被所有的入站网关共享。如果每个网关的配置需要定制，需要使用一个独立 IstioOperator CR 来生成用户网关的清单，并和 Istio 主安装清单隔离。
 
 #### 2.5.2 创建独立的 IstioOperator CR 网关
+
 因为集群已经安装了 istio 的组件，如果仅仅部署网关时，使用 `empty` 的 profile 来创建独立网关。
 
 ```yaml
@@ -452,8 +453,8 @@ istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingre
 
 #### 2.5.3 卸载网关
 
-卸载网关只需要将相应网关禁用即可，配置路径：`spec.components.ingressGateways.[相应网关].enabled` 调整为 `false`
-使用 istioctl 变更配置
+卸载网关只需要将相应网关禁用即可，配置路径：`spec.components.ingressGateways.[相应网关].enabled` 调整为 `false` 使用 istioctl 变更配置
+
 ```bash
 # 变更配置，被禁用的网关会被卸载（包括关联的资源）
 istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingress-gateway-empty.yaml 
@@ -464,6 +465,7 @@ istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingre
 ### 2.6 配置档文件管理最佳实践
 
 关于配置档文件管理的最佳实践：
+
 1. 使用 `minimal` 配置模式生成基础配置文件
 2. 调整基础配置文件中相关配置
 3. 不同的环境、集群差异化配置单独保存
@@ -488,18 +490,14 @@ istioctl install -f istio-1.14.yaml -f istio-ingress-gateway.yaml -f istio-ingre
 ```
 
 ## 3. 多集群部署模式
-各个集群部署完成后（根证书一致），多集部署可以参考官网。https://istio.io/v1.14/docs/setup/install/multicluster/
-在网络条件（pod网络与物理网络在一个平面，并且多个集群网络也互通）允许的情况下，建议使用“多主架构”的部署模型。
+
+各个集群部署完成后（根证书一致），多集部署可以参考官网。https://istio.io/v1.14/docs/setup/install/multicluster/ 在网络条件（pod网络与物理网络在一个平面，并且多个集群网络也互通）允许的情况下，建议使用“多主架构”的部署模型。
 
 **注意：多主架构的部署模式会加大 istiod xDS 的推送压力，适当的通过 Sidecar 做隔离，降低 xDS 推送量**
-
 
 ## 4. 参考
 
 1. [通过 istioctl 安装部署 istio](https://istio.io/v1.14/docs/setup/install/istioctl/)
 2. [IstioOperator Options](https://istio.io/v1.14/zh/docs/reference/config/istio.operator.v1alpha1/)
 3. [Helm installation options](https://istio.io/v1.5/docs/reference/config/installation-options/#global-options)
-3. [istio 证书](https://istio.io/v1.14/docs/tasks/security/cert-management/plugin-ca-cert/)
-
-
-[istio-CA-chain]: /images/istio证书链.png
+4. [istio 证书](https://istio.io/v1.14/docs/tasks/security/cert-management/plugin-ca-cert/)
