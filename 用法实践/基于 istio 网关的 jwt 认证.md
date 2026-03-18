@@ -20,7 +20,7 @@
       "kty": "EC",
       "crv": "P-256",
       "kid": "test-01",
-      "x": "odQWPSWEyqlVYU9svYeL8c3r9EQaw1hbkLwAOxq0XNg",
+      "x": "odQEPSWEyqlVYU9svYeL8c3r9EQaw1hbkLwAOxq0XNg",
       "y": "q6_Pt4bEIMv2bN8-ycCEZHLbh6xRDjJIyZsPSbgLHeQ",
       "use": "sig",
       "alg": "ES256"
