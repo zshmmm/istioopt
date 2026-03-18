@@ -15,5 +15,8 @@
   * [istio-proxy 资源配置](用法实践/istio-proxy资源配置.md)
   * [sidecar 启动顺序](用法实践/sidecar启动顺序.md)
   * [istio-proxy 优雅退出](用法实践/istio-proxy%E4%BC%98%E9%9B%85%E9%80%80%E5%87%BA.md)
+* [运维稳定性](运维稳定性/README.md)
+  * [规范-故障管理制度](运维稳定性/规范-故障处理制度.md)
+  * [故障报告模板](运维稳定性/故障报告模板.md)
 * [杂项](杂项/README.md)
   * [TIDB迁移OB可行性分析](杂项/TIDB迁移OB可行性分析.md)
