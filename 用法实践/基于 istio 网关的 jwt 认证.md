@@ -1,4 +1,4 @@
-# Istio 网关 jwt 认证实现
+# istio 网关 jwt 认证配置
 
 在网关层面实现 jwt 的请求认证。istio 提供 RequestAuthentication 能力，原生支持 jwt 认证。
 
@@ -6,12 +6,11 @@
 
 ### 架构
 
-![架构][jwt-istio-gw]
-
+![架构](../.gitbook/assets/jwt-istio-gw.jpeg)
 
 ### Jwks 服务
-用于 istio ingress 网关获取配置，进而对 token 进行验证。需要运维来提供（需要注意私钥的保密）。
-服务返回 jwks 格式：
+
+用于 istio ingress 网关获取配置，进而对 token 进行验证。需要运维来提供（需要注意私钥的保密）。 服务返回 jwks 格式：
 
 ```json
 {
@@ -31,18 +30,18 @@
 
 字段解释如下：
 
-| 字段 | 解释 |
-|------|------|
-| use  | 表示密钥的用途。常见的值为 "sig"，表示该密钥用于签名。 |
-| kty  | 表示密钥的类型。常见的值为 "EC"，表示椭圆曲线公钥。 |
-| kid  | 密钥 ID，用于标识密钥。它在 JWT 的验证过程中帮助选择正确的密钥进行验证。 |
-| crv  | 表示椭圆曲线的名称。常见的值为 "P-256"，表示使用 P-256 椭圆曲线。 |
-| alg  | 表示算法类型。常见的值为 "ES256"，表示使用 ECDSA（椭圆曲线数字签名算法）的 SHA-256 变体。 |
-| x/y  | 表示椭圆曲线密钥的坐标值。这些值用于计算签名和验证 JWT 的有效性。 |
+| 字段  | 解释                                                       |
+| --- | -------------------------------------------------------- |
+| use | 表示密钥的用途。常见的值为 "sig"，表示该密钥用于签名。                           |
+| kty | 表示密钥的类型。常见的值为 "EC"，表示椭圆曲线公钥。                             |
+| kid | 密钥 ID，用于标识密钥。它在 JWT 的验证过程中帮助选择正确的密钥进行验证。                 |
+| crv | 表示椭圆曲线的名称。常见的值为 "P-256"，表示使用 P-256 椭圆曲线。                 |
+| alg | 表示算法类型。常见的值为 "ES256"，表示使用 ECDSA（椭圆曲线数字签名算法）的 SHA-256 变体。 |
+| x/y | 表示椭圆曲线密钥的坐标值。这些值用于计算签名和验证 JWT 的有效性。                      |
 
 ### Jwt Token 生成服务
-需要业务提供初步认证的服务。
 
+需要业务提供初步认证的服务。
 
 ### 配置 RequestAuthentication
 
@@ -79,6 +78,7 @@ spec:
 ### 配置 AuthorizationPolicy
 
 配置 AuthorizationPolicy 明确哪些请求需要认证，哪些不需要认证
+
 1. 允许 /auth 和 /public 请求不认证
 2. 其他所有请求都需要 Token 认证
 
@@ -235,5 +235,3 @@ if __name__ == "__main__":
 1. [rfc-JSON Web Token](https://datatracker.ietf.org/doc/html/rfc7519)
 2. [Istio 验证环境](https://istio.io/latest/docs/tasks/security/authentication/authn-policy/)
 3. [Istio Authorization Policy 配置](https://istio.io/latest/docs/reference/config/security/authorization-policy/)
-
-[jwt-istio-gw]: /images/jwt-istio-gw.jpeg
