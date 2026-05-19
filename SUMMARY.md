@@ -25,6 +25,7 @@
   * [故障月报模板](运维稳定性/故障月报模版.md)
 * [FinOps](FinOps/README.md)
   * [资源分摊结算规范](FinOps/资源分摊结算规范.md)
+  * [利用率统计计算](FinOps/利用率统计计算.md)
 * [杂项](杂项/README.md)
   * [TIDB迁移OB可行性分析](杂项/TIDB迁移OB可行性分析.md)
   * [OKR制定](杂项/OKR制定.md)
