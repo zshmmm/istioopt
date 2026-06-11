@@ -27,6 +27,7 @@
 * [FinOps](finops/README.md)
   * [资源分摊结算规范](FinOps/资源分摊结算规范.md)
   * [利用率统计计算](FinOps/利用率统计计算.md)
+  * [容器资源配置推荐](FinOps/容器资源配置推荐.md)
 * [杂项](za-xiang/README.md)
   * [TIDB迁移OB可行性分析](杂项/TIDB迁移OB可行性分析.md)
   * [OKR制定](杂项/OKR制定.md)
