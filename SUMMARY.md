@@ -30,6 +30,7 @@
   * [容器资源配置推荐](FinOps/容器资源配置推荐.md)
 * [杂项](za-xiang/README.md)
   * [TIDB迁移OB可行性分析](杂项/TIDB迁移OB可行性分析.md)
+  * [运维产品立项模板](杂项/运维产品立项模板.md)
   * [OKR制定](杂项/OKR制定.md)
   * [OKR执行](杂项/OKR共创会.md)
   * [OKR复盘](杂项/OKR复盘报告.md)
